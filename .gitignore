@@ -1,0 +1,25 @@
+# ===== Virtual Env =====
+.venv*/
+venv/
+
+# ===== MongoDB =====
+bin/
+data/
+log/
+
+# ===== Node =====
+node_modules/
+
+# ===== Environment =====
+.env
+
+# ===== Uploads (optional) =====
+uploads/
+
+# ===== Python =====
+__pycache__/
+*.pyc
+
+# ===== Others =====
+*.exe
+*.pdb
