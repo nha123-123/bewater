@@ -3201,8 +3201,13 @@ app.post('/auth/reset-password', async (req, res) => {
 });
 
 
+// const PORT = process.env.PORT || 3000;
+
+// app.listen(3000, '0.0.0.0', () => {
+//   console.log('Server chạy ở http://0.0.0.0:3000');
+// });
 const PORT = process.env.PORT || 3000;
 
-app.listen(3000, '0.0.0.0', () => {
-  console.log('Server chạy ở http://0.0.0.0:3000');
+app.listen(PORT, () => {
+    console.log(`Server đang chạy trên port ${PORT}`);
 });
