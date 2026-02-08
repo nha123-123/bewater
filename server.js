@@ -16,8 +16,8 @@ app.use('/uploads', express.static('uploads'));
 const uri = "mongodb+srv://myUser:MySecurePassword123@cluster0.0nluv4h.mongodb.net/water_order_db?appName=Cluster0";
 
 // const uri = 'mongodb://localhost:27017';
-// const dbName = 'water_order_db';
-// let db;
+const dbName = 'water_order_db';
+let db;
 
 const storage = multer.diskStorage({
   destination: './uploads/',
