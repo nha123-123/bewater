@@ -11,9 +11,15 @@ app.use(cors());
 // Phục vụ file tĩnh từ thư mục uploads
 app.use('/uploads', express.static('uploads'));
 
-const uri = 'mongodb://localhost:27017';
+const uri = process.env.MONGO_URI || 'mongodb://localhost:27017';
+
 const dbName = 'water_order_db';
 let db;
+
+
+// const uri = 'mongodb://localhost:27017';
+// const dbName = 'water_order_db';
+// let db;
 
 const storage = multer.diskStorage({
   destination: './uploads/',
