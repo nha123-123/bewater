@@ -11,11 +11,8 @@ app.use(cors());
 // Phục vụ file tĩnh từ thư mục uploads
 app.use('/uploads', express.static('uploads'));
 
-const uri = process.env.MONGO_URI || 'mongodb://localhost:27017';
 
-const dbName = 'water_order_db';
-let db;
-
+const uri = "mongodb+srv://myUser:MySecurePassword123v@cluster0.xxxxx.mongodb.net/water_order_db?retryWrites=true&w=majority";
 
 // const uri = 'mongodb://localhost:27017';
 // const dbName = 'water_order_db';
