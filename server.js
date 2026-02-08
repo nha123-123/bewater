@@ -12,7 +12,8 @@ app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 
-const uri = "mongodb+srv://myUser:MySecurePassword123v@cluster0.xxxxx.mongodb.net/water_order_db?retryWrites=true&w=majority";
+// ✅ ĐÚNG (Không còn dấu ngoặc nhọn < > nữa):
+const uri = "mongodb+srv://myUser:MySecurePassword123@cluster0.0nluv4h.mongodb.net/water_order_db?appName=Cluster0";
 
 // const uri = 'mongodb://localhost:27017';
 // const dbName = 'water_order_db';
