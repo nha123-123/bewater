@@ -1922,6 +1922,10 @@ app.post('/api/sliders', authenticateToken, sliderAuth, async (req, res) => {
   try {
     if (!db) return res.status(503).json({ error: 'Server chưa kết nối cơ sở dữ liệu' });
     const { image, title, subtitle } = req.body;
+    
+    console.log(`[POST /api/sliders] User: ${req.user?._id}, role: ${req.user?.role}`);
+    console.log(`[POST /api/sliders] Body:`, { image: image?.substring?.(0, 50), title, subtitle });
+    
     if (!image || !title || !subtitle) {
       return res.status(400).json({ error: 'Thiếu dữ liệu slider' });
     }
@@ -1933,8 +1937,11 @@ app.post('/api/sliders', authenticateToken, sliderAuth, async (req, res) => {
       updatedAt: new Date(),
     };
     const result = await db.collection('sliders').insertOne(slider);
+    
+    console.log(`[POST /api/sliders] Created new slider with ID: ${result.insertedId}`);
     res.status(201).json({ ...slider, _id: result.insertedId.toString() });
   } catch (err) {
+    console.error('[POST /api/sliders] Error:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -1945,17 +1952,34 @@ app.put('/api/sliders/:id', authenticateToken, sliderAuth, async (req, res) => {
     if (!db) return res.status(503).json({ error: 'Server chưa kết nối cơ sở dữ liệu' });
     const { id } = req.params;
     const { image, title, subtitle } = req.body;
+    
+    console.log(`[PUT /api/sliders/${id}] User: ${req.user?._id}, role: ${req.user?.role}`);
+    console.log(`[PUT /api/sliders/${id}] Body:`, { image: image?.substring?.(0, 50), title, subtitle });
+    
     if (!image || !title || !subtitle) {
       return res.status(400).json({ error: 'Thiếu dữ liệu slider' });
     }
+    
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID slider không hợp lệ' });
+    }
+    
     const result = await db.collection('sliders').findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: { image, title, subtitle, updatedAt: new Date() } },
       { returnDocument: 'after' }
     );
-    if (!result.value) return res.status(404).json({ error: 'Slider không tồn tại' });
-    res.json({ ...result.value, _id: result.value._id.toString() });
+    
+    if (!result.value) {
+      console.log(`[PUT /api/sliders/${id}] Slider not found`);
+      return res.status(404).json({ error: 'Slider không tồn tại' });
+    }
+    
+    const response = { ...result.value, _id: result.value._id.toString() };
+    console.log(`[PUT /api/sliders/${id}] Updated successfully:`, { title: response.title, updatedAt: response.updatedAt });
+    res.json(response);
   } catch (err) {
+    console.error(`[PUT /api/sliders/${req.params?.id}] Error:`, err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -1984,8 +2008,20 @@ app.get('/api/sliders', async (req, res) => {
   try {
     if (!db) return res.status(503).json({ error: 'Server chưa kết nối cơ sở dữ liệu' });
     const sliders = await db.collection('sliders').find().sort({ createdAt: -1 }).toArray();
-    res.json(sliders.map(s => ({ ...s, _id: s._id.toString() })));
+    
+    console.log(`[GET /api/sliders] Found ${sliders.length} sliders`);
+    sliders.forEach((s, idx) => {
+      console.log(`  [${idx}] _id=${s._id}, title=${s.title}, image=${s.image}, updatedAt=${s.updatedAt}`);
+    });
+    
+    res.json(sliders.map(s => ({ 
+      ...s, 
+      _id: s._id.toString(),
+      createdAt: s.createdAt?.toISOString?.() || s.createdAt,
+      updatedAt: s.updatedAt?.toISOString?.() || s.updatedAt,
+    })));
   } catch (err) {
+    console.error('[GET /api/sliders] Error:', err);
     res.status(500).json({ error: err.message });
   }
 });
